@@ -1,30 +1,7 @@
 import React, { Component } from 'react';
 import { thisExpression } from '@babel/types';
-// import logo from './logo.svg';
-// import './App.css';
+import Styled from 'styled-components'
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
 
 const { ipcRenderer } = window.require('electron')
 
@@ -61,19 +38,64 @@ export default class extends Component {
 
 
   render () {
-    return <div>
-      <pre>{ this.state.dir ? `Directory: ${this.state.dir}` : '-- Choose a directory to begin --' }</pre>
-      <button onClick={ this.chooseDir }>Choose a directory</button>
+    return <App>
+      <h1>Project builder</h1>
+      <h4>{ this.state.dir ? `Directory: ${this.state.dir}` : '-- Choose a directory to begin --' }</h4>
+      <Button
+        onClick={ this.chooseDir }
+        className={ !this.state.dir ? 'active' : 'innactive' }
+      >Choose a directory</Button>
       {
         this.state.dir &&
-          <button onClick={ this.build }>Build PROD</button>
+          <Button
+            onClick={ this.build }
+            className={ this.state.dir ? 'active' : 'innactive' }
+          >Build PROD</Button>
       }
 
       <hr/>
       <h4>Status:</h4>
-      <pre>{ JSON.stringify(this.state.status, 'utf8', 2) }</pre>
+      <Pre>{ JSON.stringify(this.state.status, 'utf8', 2) }</Pre>
 
-    </div>
+    </App>
   }
 
 }
+
+
+
+const Pre = Styled.pre`
+  display: block;
+  padding: 2rem;
+  background #222;
+  color: #bada55;
+  border-radius: 4px;
+  overflow: auto;
+`
+
+const App = Styled.div`
+  background #111;
+  color: white;
+  padding: 4rem;
+  min-height: 100vh;
+`
+
+const Button = Styled.button`
+  padding: 0.5rem 1rem;
+  border: solid 1px rgba(255,255,255, 0.5);
+  border-radius: 100px;
+  color: white;
+  background: rgba(0,0,0, 0.6);
+  margin-bottom: 24px;
+  margin-right: 12px;
+  &.active {
+    background: powderblue;
+    color: black;
+  }
+  &.innactive {
+    opacity: 0.4;
+  }
+  &:focus {
+    outline: none;
+  }
+`
