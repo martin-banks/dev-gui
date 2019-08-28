@@ -172,7 +172,7 @@ ipcMain.on('cli-build-prod', (e, args) => {
     env: null
   }
 
-  const child = exec('npm run prod', options)
+  const child = exec('npm run uat', options)
   child.stdout.on('data', response => {
     console.log('npm run start message', response)
     e.sender.send('status', response)
@@ -181,4 +181,55 @@ ipcMain.on('cli-build-prod', (e, args) => {
     console.log('npm run start error', response.toString())
     e.sender.send('processError', response)
   })
+})
+
+
+ipcMain.on('cli-node-install', (e, args) => {
+  const { dir } = args
+  console.log('Installing node_modules', dir)
+
+  const options = {
+    encoding: 'utf8',
+    timeout: 0,
+    maxBuffer: 200 * 1024,
+    killSignal: 'SIGTERM',
+    cwd: dir,
+    env: null
+  }
+
+  const child = exec('npm i', options)
+  child.stdout.on('data', response => {
+    console.log('npm run install message', response)
+    e.sender.send('status', response)
+  })
+  child.stderr.on('data', response => {
+    console.log('npm run install error', response.toString())
+    e.sender.send('processError', response)
+  })
+})
+
+
+ipcMain.on('cli-preview-prod', (e, args) => {
+  const { dir } = args
+  console.log('Start preview request', dir)
+
+  let previewWindow = new BrowserWindow(
+    {
+      x: 0,
+      y: 0,
+      width: 1200,
+      height: 600,
+      webPreferences: {}
+  })
+
+  previewWindow.loadFile(`${dir}/dist/UAT_dt-newcastle-knights-sample/e39913533f661dad79aba5da58d2c64f.html`)
+
+  // Open the DevTools.
+  // previewWindow.webContents.openDevTools()
+
+  // Emitted when the window is closed.
+  previewWindow.on('closed', function () {
+    previewWindow = null
+  })
+
 })

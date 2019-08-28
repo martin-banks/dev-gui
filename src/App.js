@@ -15,6 +15,8 @@ export default class extends Component {
 
     this.chooseDir = this.chooseDir.bind(this)
     this.build = this.build.bind(this)
+    this.previewProd = this.previewProd.bind(this)
+    this.nodeInstall = this.nodeInstall.bind(this)
 
     ipcRenderer.on('chosen-folder', (e, dir) => {
       console.log('Recieved dir', { dir })
@@ -35,11 +37,18 @@ export default class extends Component {
     console.log('Sending build PROD request')
     ipcRenderer.send('cli-build-prod', { dir: this.state.dir })
   }
+  previewProd () {
+    ipcRenderer.send('cli-preview-prod', { dir: `${this.state.dir}` })
+  }
+  nodeInstall () {
+    ipcRenderer.send('cli-node-install', { dir: `${this.state.dir}` })
+
+  }
 
 
   render () {
     return <App>
-      <h1>Project builder</h1>
+      {/* <h1>Project builder</h1> */}
       <h4>{ this.state.dir ? `Directory: ${this.state.dir}` : '-- Choose a directory to begin --' }</h4>
       <Button
         onClick={ this.chooseDir }
@@ -51,6 +60,20 @@ export default class extends Component {
             onClick={ this.build }
             className={ this.state.dir ? 'active' : 'innactive' }
           >Build PROD</Button>
+      }
+      {
+        this.state.dir &&
+          <Button
+            onClick={ this.nodeInstall }
+            className={ this.state.dir ? 'active' : 'innactive' }
+          >Node-install</Button>
+      }
+      {
+        this.state.dir &&
+          <Button
+            onClick={ this.previewProd }
+            className={ this.state.dir ? 'active' : 'innactive' }
+          >Preview build</Button>
       }
 
       <hr/>
@@ -66,36 +89,36 @@ export default class extends Component {
 
 const Pre = Styled.pre`
   display: block;
-  padding: 2rem;
-  background #222;
-  color: #bada55;
-  border-radius: 4px;
-  overflow: auto;
+  // padding: 2rem;
+  // background #222;
+  // color: #bada55;
+  // border-radius: 4px;
+  // overflow: auto;
 `
 
 const App = Styled.div`
-  background #111;
-  color: white;
-  padding: 4rem;
-  min-height: 100vh;
+  // background #111;
+  // color: white;
+  padding: 1rem;
+  // min-height: 100vh;
 `
 
 const Button = Styled.button`
-  padding: 0.5rem 1rem;
-  border: solid 1px rgba(255,255,255, 0.5);
-  border-radius: 100px;
-  color: white;
-  background: rgba(0,0,0, 0.6);
-  margin-bottom: 24px;
-  margin-right: 12px;
+  // padding: 0.5rem 1rem;
+  // border: solid 1px rgba(255,255,255, 0.5);
+  // border-radius: 100px;
+  // color: white;
+  // background: rgba(0,0,0, 0.6);
+  // margin-bottom: 24px;
+  // margin-right: 12px;
   &.active {
-    background: powderblue;
-    color: black;
+    // background: powderblue;
+    // color: black;
   }
   &.innactive {
-    opacity: 0.4;
+    // opacity: 0.4;
   }
   &:focus {
-    outline: none;
+    // outline: none;
   }
 `
